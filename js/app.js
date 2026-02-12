@@ -9,8 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const uploadBtn = document.getElementById("uploadBtn");
   const topTextInput = document.getElementById("topText");
   const bottomTextInput = document.getElementById("bottomText");
+  const editTextInput = document.getElementById("editTextInput");
   const addCustomTextBtn = document.getElementById("addCustomText");
   const removeTextBtn = document.getElementById("removeText");
+  const customTextFieldsContainer = document.getElementById(
+    "customTextFieldsContainer"
+  );
   const fontFamilySelect = document.getElementById("fontFamily");
   const fontSizeRange = document.getElementById("fontSize");
   const fontSizeValue = document.getElementById("fontSizeValue");
@@ -96,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
       syncTopBottomInputs();
+      syncCustomTextFields();
     });
   }
 
@@ -125,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
           y: dims.height * 0.92,
         });
         syncTopBottomInputs();
+        syncCustomTextFields();
       });
     };
     reader.readAsDataURL(file);
@@ -153,6 +159,41 @@ document.addEventListener("DOMContentLoaded", () => {
     bottomTextInput.value = elements.length >= 2 ? elements[1].text : "";
   }
 
+  /**
+   * Sync the dynamic custom text fields: one input per text element at index 2+.
+   */
+  function syncCustomTextFields() {
+    customTextFieldsContainer.innerHTML = "";
+    const elements = CanvasEngine.getTextElements();
+    for (let i = 2; i < elements.length; i++) {
+      const row = document.createElement("div");
+      row.className = "mb-2";
+      const label = document.createElement("label");
+      label.className = "form-label small mb-1";
+      label.textContent = `Custom text ${i - 1}`;
+      label.setAttribute("for", `customText-${i}`);
+      const input = document.createElement("input");
+      input.type = "text";
+      input.id = `customText-${i}`;
+      input.className = "form-control form-control-sm";
+      input.placeholder = "Type your custom text...";
+      input.value = elements[i].text;
+      input.dataset.index = String(i);
+      input.addEventListener("input", () => {
+        const idx = parseInt(input.dataset.index, 10);
+        CanvasEngine.updateTextElement(idx, { text: input.value });
+        updateControlsFromSelected(CanvasEngine.getSelectedText());
+      });
+      input.addEventListener("focus", () => {
+        CanvasEngine.setSelectedText(parseInt(input.dataset.index, 10));
+        updateControlsFromSelected(CanvasEngine.getSelectedText());
+      });
+      row.appendChild(label);
+      row.appendChild(input);
+      customTextFieldsContainer.appendChild(row);
+    }
+  }
+
   // ─── Add Custom Text ─────────────────────────────────────────────
   addCustomTextBtn.addEventListener("click", () => {
     const dims = CanvasEngine.getDimensions();
@@ -164,6 +205,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     CanvasEngine.setSelectedText(idx);
     updateControlsFromSelected(idx);
+    syncCustomTextFields();
+    // Focus the newly created custom text field
+    const inputs = customTextFieldsContainer.querySelectorAll("input");
+    if (inputs.length > 0) {
+      const lastInput = inputs[inputs.length - 1];
+      lastInput.focus();
+      lastInput.select();
+    }
+  });
+
+  // ─── Edit selected text ────────────────────────────────────────────
+  editTextInput.addEventListener("input", () => {
+    const sel = CanvasEngine.getSelectedText();
+    if (sel >= 0) {
+      CanvasEngine.updateTextElement(sel, { text: editTextInput.value });
+      // Keep custom text field in sync when editing via this input
+      const customInput = customTextFieldsContainer.querySelector(
+        `[data-index="${sel}"]`
+      );
+      if (customInput) customInput.value = editTextInput.value;
+    }
   });
 
   // ─── Remove Selected Text ────────────────────────────────────────
@@ -172,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sel >= 0) {
       CanvasEngine.removeTextElement(sel);
       syncTopBottomInputs();
+      syncCustomTextFields();
       updateControlsFromSelected(-1);
     }
   });
@@ -222,12 +285,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateControlsFromSelected(index) {
     if (index < 0) {
       selectedTextInfo.textContent = "No text selected";
+      editTextInput.value = "";
+      editTextInput.placeholder = "Click text on canvas to edit...";
       removeTextBtn.disabled = true;
       return;
     }
     removeTextBtn.disabled = false;
     const te = CanvasEngine.getTextElements()[index];
     if (!te) return;
+    editTextInput.value = te.text;
+    editTextInput.placeholder = "Type to edit...";
     selectedTextInfo.textContent = `Selected: "${te.text.substring(0, 20)}${te.text.length > 20 ? "..." : ""}"`;
     fontFamilySelect.value = te.fontFamily;
     fontSizeRange.value = te.fontSize;
@@ -244,6 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
   clearAllBtn.addEventListener("click", () => {
     CanvasEngine.clearTextElements();
     syncTopBottomInputs();
+    syncCustomTextFields();
     updateControlsFromSelected(-1);
     document
       .querySelectorAll(".template-card")

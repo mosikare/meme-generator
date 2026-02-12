@@ -70,10 +70,21 @@
             </button>
           </div>
 
-          <!-- Top / Bottom Text -->
+          <!-- Text -->
           <div class="mb-3">
             <div class="section-header">
               <i class="bi bi-type me-1"></i>Text
+            </div>
+            <div class="mb-2">
+              <label for="editTextInput" class="form-label small mb-1"
+                >Edit selected text</label
+              >
+              <input
+                type="text"
+                id="editTextInput"
+                class="form-control form-control-sm"
+                placeholder="Click text on canvas to edit..."
+              />
             </div>
             <div class="mb-2">
               <label for="topText" class="form-label small mb-1"
@@ -96,6 +107,9 @@
                 class="form-control form-control-sm"
                 placeholder="Enter bottom text..."
               />
+            </div>
+            <div id="customTextFieldsContainer" class="mb-2">
+              <!-- Dynamic custom text fields appear here -->
             </div>
             <div class="d-flex gap-2">
               <button
