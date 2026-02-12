@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meme Generator</title>
+  <!-- Bootstrap 5 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+    crossorigin="anonymous"
+  />
+  <!-- Bootstrap Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- ─── Navbar ─────────────────────────────────────────────────── -->
+  <nav class="navbar navbar-dark py-2">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-emoji-laughing me-2"></i>Meme<span>Generator</span>
+      </a>
+      <span
+        class="text-muted-custom d-none d-md-inline"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="Pick a template or upload an image, add text, drag to position, then download!"
+      >
+        <i class="bi bi-info-circle me-1"></i>How to Use
+      </span>
+    </div>
+  </nav>
+
+  <!-- ─── Main Content ───────────────────────────────────────────── -->
+  <div class="container-fluid px-3 py-3">
+    <div class="row g-3">
+      <!-- ─── Left Panel: Controls ─────────────────────────────── -->
+      <div class="col-md-4 col-lg-3">
+        <div class="control-panel p-3">
+          <!-- Templates -->
+          <div class="mb-3">
+            <div class="section-header">
+              <i class="bi bi-images me-1"></i>Templates
+            </div>
+            <div class="row g-2" id="templateGrid"></div>
+          </div>
+
+          <!-- Upload -->
+          <div class="mb-3">
+            <div class="section-header">
+              <i class="bi bi-upload me-1"></i>Upload Image
+            </div>
+            <input
+              type="file"
+              id="uploadInput"
+              accept="image/*"
+              class="d-none"
+            />
+            <button
+              id="uploadBtn"
+              class="btn btn-outline-light btn-sm w-100"
+            >
+              <i class="bi bi-image me-1"></i>Choose Image
+            </button>
+          </div>
+
+          <!-- Top / Bottom Text -->
+          <div class="mb-3">
+            <div class="section-header">
+              <i class="bi bi-type me-1"></i>Text
+            </div>
+            <div class="mb-2">
+              <label for="topText" class="form-label small mb-1"
+                >Top Text</label
+              >
+              <input
+                type="text"
+                id="topText"
+                class="form-control form-control-sm"
+                placeholder="Enter top text..."
+              />
+            </div>
+            <div class="mb-2">
+              <label for="bottomText" class="form-label small mb-1"
+                >Bottom Text</label
+              >
+              <input
+                type="text"
+                id="bottomText"
+                class="form-control form-control-sm"
+                placeholder="Enter bottom text..."
+              />
+            </div>
+            <div class="d-flex gap-2">
+              <button
+                id="addCustomText"
+                class="btn btn-outline-light btn-sm flex-fill"
+              >
+                <i class="bi bi-plus-lg me-1"></i>Add Text
+              </button>
+              <button
+                id="removeText"
+                class="btn btn-outline-danger btn-sm flex-fill"
+                disabled
+              >
+                <i class="bi bi-trash me-1"></i>Remove
+              </button>
+            </div>
+            <div class="selected-info mt-2" id="selectedTextInfo">
+              No text selected
+            </div>
+          </div>
+
+          <!-- Font Controls -->
+          <div class="mb-3">
+            <div class="section-header">
+              <i class="bi bi-fonts me-1"></i>Font Style
+            </div>
+
+            <!-- Font Family -->
+            <div class="mb-2">
+              <label for="fontFamily" class="form-label small mb-1"
+                >Font</label
+              >
+              <select
+                id="fontFamily"
+                class="form-select form-select-sm"
+              >
+                <option value="Impact" selected>Impact</option>
+                <option value="Arial">Arial</option>
+                <option value="Comic Sans MS">Comic Sans</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+              </select>
+            </div>
+
+            <!-- Font Size -->
+            <div class="mb-2">
+              <label class="form-label small mb-1"
+                >Size:
+                <span id="fontSizeValue" class="text-info">40px</span></label
+              >
+              <input
+                type="range"
+                id="fontSize"
+                class="form-range"
+                min="16"
+                max="80"
+                value="40"
+              />
+            </div>
+
+            <!-- Font Color + Bold/Italic -->
+            <div
+              class="d-flex align-items-center gap-2 mb-2"
+            >
+              <div>
+                <label class="form-label small mb-1">Color</label>
+                <input type="color" id="fontColor" value="#ffffff" />
+              </div>
+              <div class="ms-auto d-flex gap-1">
+                <button
+                  id="boldToggle"
+                  class="btn btn-sm btn-toggle"
+                  title="Bold"
+                >
+                  <i class="bi bi-type-bold"></i>
+                </button>
+                <button
+                  id="italicToggle"
+                  class="btn btn-sm btn-toggle"
+                  title="Italic"
+                >
+                  <i class="bi bi-type-italic"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Outline Controls -->
+          <div class="mb-3">
+            <div class="section-header">
+              <i class="bi bi-border-width me-1"></i>Outline
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div>
+                <label class="form-label small mb-1">Color</label>
+                <input
+                  type="color"
+                  id="outlineColor"
+                  value="#000000"
+                />
+              </div>
+              <div class="flex-fill">
+                <label class="form-label small mb-1"
+                  >Width:
+                  <span id="outlineWidthValue" class="text-info"
+                    >3px</span
+                  ></label
+                >
+                <input
+                  type="range"
+                  id="outlineWidth"
+                  class="form-range"
+                  min="0"
+                  max="8"
+                  value="3"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="d-grid gap-2">
+            <button id="clearAll" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-counterclockwise me-1"></i>Clear All
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Right Panel: Canvas ──────────────────────────────── -->
+      <div class="col-md-8 col-lg-9">
+        <div class="canvas-panel p-3 text-center">
+          <canvas id="memeCanvas"></canvas>
+          <div class="mt-3">
+            <button id="downloadBtn" class="btn btn-download btn-lg">
+              <i class="bi bi-download me-2"></i>Download Meme
+            </button>
+          </div>
+          <p class="text-muted-custom mt-2 mb-0">
+            <i class="bi bi-hand-index me-1"></i>Click on text to select
+            it, then drag to reposition
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Scripts ────────────────────────────────────────────────── -->
+  <!-- Bootstrap 5 JS Bundle -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"
+  ></script>
+  <!-- App Scripts (order matters) -->
+  <script src="js/templates.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/drag.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#87ceeb"/>
+  <rect x="0" y="200" width="600" height="200" fill="#8fbc8f"/>
+  <!-- Person on left (girlfriend) -->
+  <circle cx="100" cy="180" r="35" fill="#f5c542" stroke="#333" stroke-width="2"/>
+  <circle cx="90" cy="175" r="4" fill="#333"/>
+  <circle cx="110" cy="175" r="4" fill="#333"/>
+  <path d="M85 195 Q100 205 115 195" fill="none" stroke="#333" stroke-width="3"/>
+  <rect x="80" y="215" width="40" height="80" rx="10" fill="#e74c3c"/>
+  <text x="100" y="330" text-anchor="middle" font-size="14" fill="#555">Girlfriend</text>
+  <!-- Person in middle (boyfriend) -->
+  <circle cx="300" cy="170" r="40" fill="#f5c542" stroke="#333" stroke-width="2"/>
+  <circle cx="285" cy="162" r="5" fill="#333"/>
+  <circle cx="315" cy="162" r="5" fill="#333"/>
+  <path d="M280 185 Q300 200 320 185" fill="none" stroke="#333" stroke-width="3"/>
+  <rect x="275" y="210" width="50" height="85" rx="10" fill="#3498db"/>
+  <text x="300" y="330" text-anchor="middle" font-size="14" fill="#555">Boyfriend</text>
+  <!-- Person on right (other) -->
+  <circle cx="500" cy="180" r="35" fill="#f5c542" stroke="#333" stroke-width="2"/>
+  <circle cx="490" cy="175" r="4" fill="#333"/>
+  <circle cx="510" cy="175" r="4" fill="#333"/>
+  <path d="M485 195 Q500 205 515 195" fill="none" stroke="#333" stroke-width="3"/>
+  <rect x="480" y="215" width="40" height="80" rx="10" fill="#9b59b6"/>
+  <text x="500" y="330" text-anchor="middle" font-size="14" fill="#555">Other</text>
+  <!-- Arrow showing distraction -->
+  <path d="M270 165 C350 120 430 120 470 165" fill="none" stroke="#e74c3c" stroke-width="3" stroke-dasharray="8,4" marker-end="url(#arrow)"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e74c3c"/>
+    </marker>
+  </defs>
+</svg>
