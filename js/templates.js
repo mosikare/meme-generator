@@ -75,12 +75,4 @@ const MemeTemplates = [
       { text: "Bottom text", xRatio: 0.5, yRatio: 0.88 },
     ],
   },
-  {
-    name: "Custom Meme",
-    path: "assets/templates/meme-1770875450632.png",
-    defaultTexts: [
-      { text: "Top text", xRatio: 0.5, yRatio: 0.12 },
-      { text: "Bottom text", xRatio: 0.5, yRatio: 0.88 },
-    ],
-  },
 ];
